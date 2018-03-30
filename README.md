@@ -5,7 +5,7 @@ Done as a programming exercise and as a useful component of potential future pro
 
 Dependencies
 ------------
-png++ (C++ libpng wrapper to simplify dealing with image files)
+- png++ (C++ libpng wrapper to simplify dealing with image files)
 
 Usage
 -----
