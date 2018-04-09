@@ -6,6 +6,7 @@
 
 //--=== Other files ===--
 #include "maths.h"
+#include "neural_network.h"
 
 const long img_w = 512, img_h = 512;
 
@@ -19,20 +20,15 @@ int main(int argc, char** argv)
 	}
 
 	if (!strcmp(argv[1], "t")) {
-		//--=== Training ===--
+		//		--=== Training ===--
 		std::cout << "Training neural network at: " << argv[2] << std::endl;
 	} else if (!strcmp(argv[1], "c")) {
-		//--=== Classification ===--
+		//		--=== Classification ===--
 		std::cout << "Classifying image with: " << argv[2] << std::endl;
-		try {
-			std::vector<double> v = {5, 6, 3, 2, 4, 1, -2, 0.5, 0.6, 3, 5, 7};
-			matrix<double> A(4, 3, v);
-			matrix<double> B(4, 3, {1, 0, 0, 0, 0, 5, 4, 3, 1, 0, 0, 3});
-			matrix<double> C = B + A;
-			std::cout << A << "\n+\n" << B << "\n=\n" << C;
-		} catch (std::string e) {
-			std::cout << "[ERROR][MATRIX TESTING] " << e << std::endl;
-		}
+		mlp net(2, 2, {2, 2});
+		std::cout << net << std::endl;
+		matrix<double> out = net.flow({0.3, 0.7, 0.5});
+		std::cout << "Output: \n" << out << std::endl;
 	}
 
 	return 0;
