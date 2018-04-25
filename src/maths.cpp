@@ -122,8 +122,6 @@ std::ostream& operator << (std::ostream& os, matrix<T>& M)
 U dot (matrix<U> A, matrix<V> B)
 {
 	assert(A.get_rows() * A.get_cols() == B.get_rows() * B.get_cols());
-	assert(A.get_rows() == 1 || A.get_cols() == 1);
-	assert(B.get_rows() == 1 || B.get_cols() == 1);
 	int length = A.get_rows() * A.get_cols();
 	U sum = 0;
 	for (int i = 0; i < length; i++)

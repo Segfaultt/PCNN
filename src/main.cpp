@@ -25,9 +25,9 @@ int main(int argc, char** argv)
 	} else if (!strcmp(argv[1], "c")) {
 		//		--=== Classification ===--
 		std::cout << "Classifying image with: " << argv[2] << std::endl;
-		mlp net(2, 2, {2, 2});
+		mlp net(2, 2, {2, 3});
 		std::cout << net << std::endl;
-		matrix<double> out = net.flow({0.3, 0.7, 0.5});
+		matrix<double> out = net.flow((std::vector<double>){0.3, 0.7, 1});
 		std::cout << "Output: \n" << out << std::endl;
 	}
 

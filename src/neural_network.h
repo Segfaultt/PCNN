@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <math.h>
+#include <algorithm>
 
 #include "maths.h"
 

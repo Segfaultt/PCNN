@@ -6,10 +6,15 @@ double sigmoid (double x)
 	return ex/(ex + 1);
 }
 
+double ReLU(double x)
+{
+	return std::max(x, 0.0);
+}
+
 matrix<double> flow_layer(matrix<double> input, matrix<double> bias, matrix<double> weights)
 {
 	try {
-		return ((input * weights) + bias).apply(sigmoid);
+		return ((input * weights) + bias).apply(ReLU);
 	} catch (std::string e) {
 		std::cout << "[ERROR][FLOW_LAYER]: "<< e << std::endl;
 	}
@@ -17,6 +22,7 @@ matrix<double> flow_layer(matrix<double> input, matrix<double> bias, matrix<doub
 
 matrix<double> mlp::flow(matrix<double> inputs, int i)
 {
+	assert(inputs.get_cols() == input_size);
 	matrix<double> M = inputs;
 	for (int i = 0; i < hidden_layers + 1; i++) {
 		M = flow_layer(M, bias[i], weight[i]);
