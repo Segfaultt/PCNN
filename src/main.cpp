@@ -8,7 +8,7 @@
 #include "maths.h"
 #include "neural_network.h"
 
-const long img_w = 512, img_h = 512;
+const unsigned long img_w = 256, img_h = 256;
 
 int main(int argc, char** argv)
 {
@@ -25,9 +25,9 @@ int main(int argc, char** argv)
 	} else if (!strcmp(argv[1], "c")) {
 		//		--=== Classification ===--
 		std::cout << "Classifying image with: " << argv[2] << std::endl;
-		mlp net(2, 2, {2, 3});
+		mlp net(2, 2, {2, 3}, 1, 1);
 		std::cout << net << std::endl;
-		matrix<double> out = net.flow((std::vector<double>){0.3, 0.7, 1});
+		matrix<double> out = net.flow((std::vector<double>){1, 1});
 		std::cout << "Output: \n" << out << std::endl;
 	}
 

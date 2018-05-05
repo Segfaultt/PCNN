@@ -11,10 +11,16 @@ double ReLU(double x)
 	return std::max(x, 0.0);
 }
 
+double identity (double x)
+{
+	return x;
+}
+
 matrix<double> flow_layer(matrix<double> input, matrix<double> bias, matrix<double> weights)
 {
 	try {
-		return ((input * weights) + bias).apply(ReLU);
+		matrix<double> M = ((input * weights) + bias).apply(sigmoid);
+		return M;
 	} catch (std::string e) {
 		std::cout << "[ERROR][FLOW_LAYER]: "<< e << std::endl;
 	}
@@ -33,7 +39,7 @@ matrix<double> mlp::flow(matrix<double> inputs, int i)
 
 matrix<double> mlp::flow(std::vector<double> inputs)
 {
-	matrix<double> M(1, inputs.size());
+	matrix<double> M(1, inputs.size(), inputs);
 	return flow(M);
 }
 
@@ -130,3 +136,4 @@ std::ostream& operator << (std::ostream& os, mlp& mlp)
 
 	return os;
 }
+
