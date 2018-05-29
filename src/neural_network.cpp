@@ -1,5 +1,26 @@
 #include "neural_network.h"
 
+
+//euclidean distance squared 
+double square_euclidean_distance (std::vector<double> a, std::vector<double> b)
+{
+	std::vector<double> sum(a.size());
+	std::transform(a.begin(), a.end(), b.begin(), sum.begin(), [] (double x, double y)
+								{
+									double diff = x - y;
+									return diff * diff;
+								});
+	return std::accumulate(sum.begin(), sum.end(), 0);
+}
+
+//mean squared error
+double mse (std::vector< std::vector<double> > y, std::vector< std::vector<double> > Y)
+{
+	std::vector<double> error_squared(y.size());
+	std::transform(y.begin(), y.end(), Y.begin(), error_squared.begin(), square_euclidean_distance);
+	return std::accumulate(error_squared.begin(), error_squared.end(), 0)/(double)(2 * y.size());
+}
+
 double sigmoid (double x)
 {
 	double ex = exp(x);
