@@ -6,10 +6,10 @@ double square_euclidean_distance (std::vector<double> a, std::vector<double> b)
 {
 	std::vector<double> sum(a.size());
 	std::transform(a.begin(), a.end(), b.begin(), sum.begin(), [] (double x, double y)
-								{
-									double diff = x - y;
-									return diff * diff;
-								});
+			{
+			double diff = x - y;
+			return diff * diff;
+			});
 	return std::accumulate(sum.begin(), sum.end(), 0);
 }
 
@@ -85,6 +85,7 @@ mlp::mlp(int in_size, int out_size, std::vector<int> hid_size, int ran_min, int 
 	//input to hidden weights
 	{
 		std::vector<double> init_data;
+		init_data.reserve(input_size * hidden_size[0]);
 		for (int k = 0; k < input_size * hidden_size[0]; k++) {
 			srand(seed++);
 			init_data.push_back((double)rand()/RAND_MAX * abs(ran_min - ran_max) + std::min(ran_min, ran_max));
@@ -96,6 +97,7 @@ mlp::mlp(int in_size, int out_size, std::vector<int> hid_size, int ran_min, int 
 	//hidden to hidden weights
 	for (int i = 0; i < hidden_layers - 1; i++) {
 		std::vector<double> init_data;
+		init_data.reserve(hidden_size[i] * hidden_size[i+1]);
 		for (int k = 0; k < hidden_size[i] * hidden_size[i+1]; k++) {
 			srand(seed++);
 			init_data.push_back((double)rand()/RAND_MAX * abs(ran_min - ran_max) + std::min(ran_min, ran_max));
@@ -108,6 +110,7 @@ mlp::mlp(int in_size, int out_size, std::vector<int> hid_size, int ran_min, int 
 	//hidden to output weights
 	{
 		std::vector<double> init_data;
+		init_data.reserve(output_size * hidden_size[hidden_layers-1]);
 		for (int k = 0; k < output_size * hidden_size[hidden_layers-1]; k++) {
 			srand(seed++);
 			init_data.push_back((double)rand()/RAND_MAX * abs(ran_min - ran_max) + std::min(ran_min, ran_max));
@@ -122,6 +125,7 @@ mlp::mlp(int in_size, int out_size, std::vector<int> hid_size, int ran_min, int 
 	//hidden layer
 	for (int i = 0; i < hidden_layers; i++) {
 		std::vector<double> init_data;
+		init_data.reserve(hidden_size[i]);
 		for (int k = 0; k < hidden_size[i]; k++) {
 			srand(seed++);
 			init_data.push_back((double)rand()/RAND_MAX * abs(ran_min - ran_max) + std::min(ran_min, ran_max));
@@ -132,6 +136,7 @@ mlp::mlp(int in_size, int out_size, std::vector<int> hid_size, int ran_min, int 
 	//output layer
 	{
 		std::vector<double> init_data;
+		init_data.reserve(output_size);
 		for (int k = 0; k < output_size; k++) {
 			srand(seed++);
 			init_data.push_back((double)rand()/RAND_MAX * abs(ran_min - ran_max) + std::min(ran_min, ran_max));

@@ -7,6 +7,7 @@
 //--=== Other files ===--
 #include "maths.h"
 #include "neural_network.h"
+#include "convolution.h"
 
 const unsigned long img_w = 256, img_h = 256;
 
@@ -26,10 +27,13 @@ int main(int argc, char** argv)
 		//		--=== Classification ===--
 		std::cout << "Classifying image with: " << argv[2] << std::endl;
 		mlp net(2, 2, {2, 3}, -1, 1);
-		std::cout << net << std::endl;
-		matrix<double> out = net.flow((std::vector<double>){1, 1});
-		std::cout << "Output: \n" << out << std::endl;
+		//std::cout << net << std::endl;
+		//matrix<double> out = net.flow((std::vector<double>){1, 1});
+		//std::cout << "Output: \n" << out << std::endl;
 	}
+	
+	convolution conv(3, 2, 2, 2, -2);
+	std::cout << conv;
 
 	return 0;
 }
