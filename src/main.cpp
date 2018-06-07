@@ -32,8 +32,16 @@ int main(int argc, char** argv)
 		//std::cout << "Output: \n" << out << std::endl;
 	}
 	
-	convolution conv(3, 2, 2, 2, -2);
-	std::cout << conv;
+	matrix<double> img(10, 10);
+	convolution<double> conv(3, 2, 2, 10, -10, 1);
+	std::cout << img << conv;
+	auto output = conv.flow(img);
+	output.for_each([](std::vector<double> v) {
+			std::cout <<std::endl<<std::endl<< "v: ";
+			std::cout << v.capacity();
+			for (auto x : v)
+				std::cout << x << ' ';
+		});
 
 	return 0;
 }

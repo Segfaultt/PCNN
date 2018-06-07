@@ -1,4 +1,4 @@
-#pragma once
+#pragma once //class templates are inconvenient and require this
 #include "maths.h"
 
 	template<class T>
@@ -95,25 +95,31 @@ matrix<T>::matrix(int starting_rows, int starting_cols)
 	template<class T>
 std::ostream& operator << (std::ostream& os, matrix<T>& M)
 {
-	os << "_";
-	for (int i = 0; i < M.cols; i++) {
-		os << "\t";
-	}
-	os << "_\n";
+	std::cout << M.rows << 'x' << M.cols << std::endl;
+	/*
+	   os << "_";
+	   for (int i = 0; i < M.cols; i++) {
+	   os << "\t";
+	   }
+	   os << "_\n";
+	 */
 
 	for (int r = 0; r < M.rows; r++) {
-		os << "| ";
+		//os << "| ";
 		for (int c = 0; c < M.cols; c++) {
 			os << M(c, r) << '\t';
 		}
-		os << "|\n";
+		//os << "|";
+		std::cout << std::endl;
 	}
 
-	os << "-";
-	for (int i = 0; i < M.cols; i++) {
-		os << "\t";
-	}
-	os << "-\n";
+	/*
+	   os << "-";
+	   for (int i = 0; i < M.cols; i++) {
+	   os << "\t";
+	   }
+	   os << "-\n";
+	 */
 
 	return os;
 }
@@ -131,16 +137,24 @@ U dot (matrix<U> A, matrix<V> B)
 }
 
 template<class T>
-template<class R>
-matrix<R> matrix<T>::apply(R (* function)(T))
+	template<class R>
+matrix<R> matrix<T>::apply(std::function<R(T)> function)
 {
 	std::vector<R> new_data;
 	for (int i = 0; i < rows * cols; i++) {
-		new_data.push_back((*function)(*(data + i)));
+		new_data.push_back(function(*(data + i)));
 	}
 
 	matrix<R> M(rows, cols, new_data);
 	return M;
+}
+
+template<class T>
+void matrix<T>::for_each(std::function<void(T&)> function)
+{
+	for (int i = 0; i < rows * cols; i++) {
+		function(*(data + i));
+	}
 }
 
 	template<class T>
@@ -175,4 +189,15 @@ matrix<T> matrix<T>::c(int col_number)
 		*(M.begin() + i) = *(data + col_number + cols*i);
 	}
 	return M;
+}
+
+	template<class T>
+matrix<T> matrix<T>::submatrix(int starting_r, int starting_c, int sm_rows, int sm_cols)
+{
+	matrix<T> sm(sm_rows, sm_cols);
+	for (int i = 0; i < sm_rows; i++) {
+		memcpy(sm.begin() + sm_cols * i, data + cols * (starting_r + i) + starting_c, sm_cols * sizeof(T));
+	}
+	
+	return sm;
 }

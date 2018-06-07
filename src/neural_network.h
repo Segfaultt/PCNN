@@ -1,3 +1,5 @@
+#pragma once 
+
 #include <cstdlib>
 #include <math.h>
 #include <algorithm>
@@ -8,6 +10,12 @@
 double square_euclidean_distance (std::vector<double> a, std::vector<double> b);
 
 double mse (std::vector< std::vector<double> > y, std::vector< std::vector<double> > Y);
+
+double sigmoid (double x);
+
+double ReLU(double x);
+
+double identity (double x);
 
 matrix<double> flow_layer(matrix<double> input, matrix<double> bias, matrix<double> weights);
 

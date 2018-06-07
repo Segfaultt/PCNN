@@ -1,11 +1,11 @@
 PCNN
 ====
 ### Convolutional neural network for classifying images into categories
-Done as a programming exercise and as a useful component of potential future project
+Done as a programming exercise and as a useful component of potential future projects
 
 Dependencies
 ------------
-- png++ (C++ libpng wrapper to simplify dealing with image files)
+- opencv (reading and preprocessing images)
 
 Usage
 -----

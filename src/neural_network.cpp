@@ -1,4 +1,4 @@
-#include "neural_network.h"
+#include "neural_network.h" 
 
 
 //euclidean distance squared 
@@ -40,7 +40,7 @@ double identity (double x)
 matrix<double> flow_layer(matrix<double> input, matrix<double> bias, matrix<double> weights)
 {
 	try {
-		matrix<double> M = ((input * weights) + bias).apply(sigmoid);
+		matrix<double> M = ((input * weights) + bias).apply<double>(sigmoid);
 		return M;
 	} catch (std::string e) {
 		std::cout << "[ERROR][FLOW_LAYER]: "<< e << std::endl;

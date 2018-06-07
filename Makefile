@@ -12,6 +12,9 @@ obj:
 clean:
 	rm -rf obj/*
 
+reset:	clean all
+	echo "Successfully made from scratch"
+
 obj/main.o: src/main.cpp
 	$(CC) $(C_FLAGS) -c src/main.cpp -o obj/main.o
 
