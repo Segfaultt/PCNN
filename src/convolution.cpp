@@ -15,7 +15,7 @@ convolution<T>::convolution(int n_kernels, int w_kernel, int h_kernel, T max_val
 			std::vector<T> init_data(w_kernel*h_kernel);
 			std::generate_n(init_data.begin(), w_kernel*h_kernel, [min_value, max_value] () {
 					srand(seed++);
-					return (T)rand()/RAND_MAX * std::abs(min_value - max_value) + std::min(min_value, max_value);
+					return (double)rand()/RAND_MAX * std::abs(min_value - max_value) + std::min(min_value, max_value);
 					});
 			matrix<T> M(h_kernel, w_kernel, init_data);
 			return M;
@@ -24,7 +24,7 @@ convolution<T>::convolution(int n_kernels, int w_kernel, int h_kernel, T max_val
 	bias.reserve(n_kernels);
 	std::generate_n(bias.begin(), n_kernels, [min_value, max_value] () {
 			srand(seed++);
-			return (T)rand()/RAND_MAX * std::abs(min_value - max_value) + std::min(min_value, max_value);
+			return (double)rand()/RAND_MAX * std::abs(min_value - max_value) + std::min(min_value, max_value);
 			});
 }
 
@@ -41,8 +41,8 @@ std::ostream& operator<< (std::ostream& os, convolution<U>& conv)
 	template<class T>
 matrix< std::vector<T> > convolution<T>::flow(matrix<T>& img)
 {
-	const int img_r = (img.get_rows() - kernel_height)/stride,
-	      img_c = (img.get_cols() - kernel_width)/stride;
+	const int img_r = (img.get_rows() - kernel_height)/stride + 1,
+	      img_c = (img.get_cols() - kernel_width)/stride + 1;
 	matrix< std::vector<T> > convolved(img_r, img_c);
 	convolved.for_each([this] (std::vector<T> &pixel)
 			{
@@ -52,8 +52,9 @@ matrix< std::vector<T> > convolution<T>::flow(matrix<T>& img)
 
 	for (int r = 0; r < img_r; r++) {
 		for (int c = 0; c < img_c; c++) {
-			for (int d = 0; d < depth; d++)
+			for (int d = 0; d < depth; d++) {
 				convolved(r, c)[d] = dot(kernel[d], img.submatrix(r*stride, c*stride, kernel_width, kernel_height)) + bias[d];
+			}
 		}
 	}
 

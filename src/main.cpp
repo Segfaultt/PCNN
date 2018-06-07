@@ -31,17 +31,20 @@ int main(int argc, char** argv)
 		//matrix<double> out = net.flow((std::vector<double>){1, 1});
 		//std::cout << "Output: \n" << out << std::endl;
 	}
-	
-	matrix<double> img(10, 10);
-	convolution<double> conv(3, 2, 2, 10, -10, 1);
+
+	matrix<int> img(10, 10);
+	{
+		int c = 0;
+		img.for_each([&c](int& x){x = c++;});
+	}
+	convolution<int> conv(3, 2, 2, 10, -10, 1);
 	std::cout << img << conv;
 	auto output = conv.flow(img);
-	output.for_each([](std::vector<double> v) {
+	output.for_each([](std::vector<int> v) {
 			std::cout <<std::endl<<std::endl<< "v: ";
-			std::cout << v.capacity();
 			for (auto x : v)
-				std::cout << x << ' ';
-		});
+			std::cout << x << ' ';
+			});
 
 	return 0;
 }
