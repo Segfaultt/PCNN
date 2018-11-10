@@ -26,27 +26,18 @@ int main(int argc, char** argv)
 	} else if (!strcmp(argv[1], "c")) {
 		//		--=== Classification ===--
 		std::cout << "Classifying image with: " << argv[2] << std::endl;
-		mlp net(2, 2, {2, 3}, -1, 1);
-		//std::cout << net << std::endl;
-		//matrix<double> out = net.flow((std::vector<double>){1, 1});
-		//std::cout << "Output: \n" << out << std::endl;
 	}
 
-	std::vector< matrix<int> > img;
+	matrix<double> img(4,4);
 	{
 		int c = 0;
-		for (int i = 0; i < 3; i++) {
-			matrix<int> M(10, 10);
-			M.for_each([&c](int& x){x = c++;});
-			img.push_back(M);
-		}
+		img.for_each([&c](double& x){x = sqrt(c++);});
 	}
-	for (int i = 0; i < 3; i++)
-		std::cout << "Layer: " << i << "\n" << img[i] << std::endl;
-	convolution<int> conv(3, 2, 2, 5, -5, 1);
+		std::cout << "img: " << "\n" << img << std::endl;
+	convolution<double> conv(3, 1, 5, -5, 1);
 	std::cout << "Conv:\n" << conv;
 	auto output = conv.flow(img);
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < conv.get_depth(); i++)
 		std::cout << "Layer: " << i << "\n" << output[i] << std::endl;
 
 	return 0;

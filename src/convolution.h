@@ -10,8 +10,13 @@
 template<class T>
 class convolution {
 	public:
-		convolution(int layers, int n_kernels, int l_kernel, T max_value, T min_value, int kern_stride);
-		std::vector< matrix<T> > flow(std::vector< matrix<T> > &img);
+		convolution(int n_kernels, int l_kernel, T max_value, T min_value, int kern_stride);//constructor
+		std::vector< matrix<T> > flow(matrix<T>& img);//apply each filter to the input and get out a layer for each filter
+		
+		//getters
+		int get_depth();
+		int get_stride();
+		int get_kernel_length();
 
 		template<class U>
 			friend std::ostream& operator<< (std::ostream& os, convolution<U>& M);
@@ -20,10 +25,9 @@ class convolution {
 
 	private:
 		const int depth,
-		      in_depth,
 		      stride,
-		      kernel_length;
-		std::vector< std::vector< matrix<T> > > kernel;//vector of clutches of filters
+		      kernel_length;//the length of 1 side of a square kernel in px
+		std::vector< matrix<T> > kernel;//vector of clutches of filters
 		std::vector<T> bias;
 };
 
