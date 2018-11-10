@@ -1,4 +1,4 @@
-#pragma once //the things I do for abstraction and generalisation 
+#pragma once
 #include "convolution.h"
 
 
@@ -6,20 +6,27 @@ template<class T>
 int convolution<T>::seed = time(NULL) + 0xBAB;
 
 	template<class T>
-convolution<T>::convolution(int n_kernels, int w_kernel, int h_kernel, T max_value, T min_value, int kern_stride) : depth(n_kernels), stride(kern_stride), kernel_width(w_kernel), kernel_height(h_kernel)
+convolution<T>::convolution(int layers, int n_kernels, int l_kernel, T max_value, T min_value, int kern_stride) : depth(n_kernels), stride(kern_stride), kernel_length(l_kernel), in_depth(layers)
 {
+	//randomly generate kernels
 	kernel.reserve(n_kernels);
-	std::generate_n(kernel.begin(), n_kernels, [w_kernel, h_kernel, min_value, max_value] () 
+	std::generate_n(kernel.begin(), n_kernels, [layers, l_kernel, min_value, max_value] () 
 			{
-			srand(seed++);
-			std::vector<T> init_data(w_kernel*h_kernel);
-			std::generate_n(init_data.begin(), w_kernel*h_kernel, [min_value, max_value] () {
+			std::vector< matrix<T> > r_value;
+			r_value.reserve(layers);
+			std::generate_n(r_value.begin(), layers, [l_kernel, min_value, max_value] {
 					srand(seed++);
-					return (double)rand()/RAND_MAX * std::abs(min_value - max_value) + std::min(min_value, max_value);
+					std::vector<T> init_data(l_kernel*l_kernel);
+					std::generate_n(init_data.begin(), l_kernel*l_kernel, [min_value, max_value] () {
+							srand(seed++);
+							return (double)rand()/RAND_MAX * std::abs(min_value - max_value) + std::min(min_value, max_value);
+							});
+					matrix<T> M(l_kernel, l_kernel, init_data);
+					return M;
 					});
-			matrix<T> M(h_kernel, w_kernel, init_data);
-			return M;
+			return r_value;
 			});
+
 
 	bias.reserve(n_kernels);
 	std::generate_n(bias.begin(), n_kernels, [min_value, max_value] () {
@@ -31,29 +38,39 @@ convolution<T>::convolution(int n_kernels, int w_kernel, int h_kernel, T max_val
 	template<class U>
 std::ostream& operator<< (std::ostream& os, convolution<U>& conv)
 {
+	os << "input depth: " << conv.in_depth << std::endl;
+	os << "output depth: " << conv.depth << std::endl;
+	os << "kernel dimensions: " << conv.kernel_length << "x" << conv.kernel_length << std::endl;
+	os << "stride: " << conv.stride << std::endl;
 	for (int i = 0; i < conv.depth; i++) {
 		os << std::endl << i << ":\n";
-		os << conv.kernel[i];
+		for (int j = 0; j < conv.in_depth; j++)
+			os << conv.kernel[i][j];
 		os << conv.bias[i] << std::endl;
 	}
 }
 
 	template<class T>
-matrix< std::vector<T> > convolution<T>::flow(matrix<T>& img)
+std::vector< matrix<T> > convolution<T>::flow(std::vector< matrix<T> >& img)
 {
-	const int img_r = (img.get_rows() - kernel_height)/stride + 1,
-	      img_c = (img.get_cols() - kernel_width)/stride + 1;
-	matrix< std::vector<T> > convolved(img_r, img_c);
-	convolved.for_each([this] (std::vector<T> &pixel)
-			{
-			pixel.resize(depth);
-			return 0;
-			});
+	const int img_r = (img[0].get_rows() - kernel_length)/stride + 1,
+	      img_c = (img[0].get_cols() - kernel_length)/stride + 1;
+	std::vector< matrix<T> > convolved;
+	{
+		matrix<T> M(img_r, img_c);
+		for (int i = 0; i < depth; i++)
+			convolved.push_back(M);
+	}
 
 	for (int r = 0; r < img_r; r++) {
 		for (int c = 0; c < img_c; c++) {
 			for (int d = 0; d < depth; d++) {
-				convolved(r, c)[d] = dot(kernel[d], img.submatrix(r*stride, c*stride, kernel_width, kernel_height)) + bias[d];
+				T sum = bias[d];
+				for (int layer = 0; layer < in_depth; layer++) {
+					sum += dot(kernel[d][layer], img[layer].submatrix(r*stride, c*stride, kernel_length, kernel_length));
+
+				}
+				convolved[d](r, c) = sum;
 			}
 		}
 	}

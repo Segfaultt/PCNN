@@ -1,8 +1,8 @@
 //--=== STL ===--
 #include <iostream>
+#include <vector>
 
 //--=== Dependencies ===--
-#include <png++/png.hpp>
 
 //--=== Other files ===--
 #include "maths.h"
@@ -32,19 +32,22 @@ int main(int argc, char** argv)
 		//std::cout << "Output: \n" << out << std::endl;
 	}
 
-	matrix<int> img(10, 10);
+	std::vector< matrix<int> > img;
 	{
 		int c = 0;
-		img.for_each([&c](int& x){x = c++;});
+		for (int i = 0; i < 3; i++) {
+			matrix<int> M(10, 10);
+			M.for_each([&c](int& x){x = c++;});
+			img.push_back(M);
+		}
 	}
-	convolution<int> conv(3, 2, 2, 10, -10, 1);
-	std::cout << img << conv;
+	for (int i = 0; i < 3; i++)
+		std::cout << "Layer: " << i << "\n" << img[i] << std::endl;
+	convolution<int> conv(3, 2, 2, 5, -5, 1);
+	std::cout << "Conv:\n" << conv;
 	auto output = conv.flow(img);
-	output.for_each([](std::vector<int> v) {
-			std::cout <<std::endl<<std::endl<< "v: ";
-			for (auto x : v)
-			std::cout << x << ' ';
-			});
+	for (int i = 0; i < 3; i++)
+		std::cout << "Layer: " << i << "\n" << output[i] << std::endl;
 
 	return 0;
 }
