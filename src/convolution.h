@@ -8,6 +8,9 @@
 #include "neural_network.h"
 
 template<class T>
+T mse(matrix<T> y, matrix<T> Y);
+
+template<class T>
 class convolution {
 	public:
 		convolution(int n_kernels, int l_kernel, T max_value, T min_value, int kern_stride);//constructor

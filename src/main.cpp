@@ -28,17 +28,23 @@ int main(int argc, char** argv)
 		std::cout << "Classifying image with: " << argv[2] << std::endl;
 	}
 
-	matrix<double> img(4,4);
+	matrix<int> img(4,4);
 	{
-		int c = 0;
-		img.for_each([&c](double& x){x = sqrt(c++);});
+		int c = 1;
+		img.for_each([&c](int& x){x = c++;});
 	}
-		std::cout << "img: " << "\n" << img << std::endl;
-	convolution<double> conv(3, 1, 5, -5, 1);
+	std::cout << "img: " << "\n" << img << std::endl;
+	convolution<int> conv(3, 2, 5, -5, 1);
 	std::cout << "Conv:\n" << conv;
 	auto output = conv.flow(img);
 	for (int i = 0; i < conv.get_depth(); i++)
 		std::cout << "Layer: " << i << "\n" << output[i] << std::endl;
+	matrix<int> desired_output(3,3);
+	{
+		int c = 0;
+		img.for_each([&c](int& x){x = c;});
+	}
+	std::cout << mse(output[0], desired_output);
 
 	return 0;
 }

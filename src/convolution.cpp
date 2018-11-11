@@ -1,6 +1,13 @@
 #pragma once
 #include "convolution.h"
 
+template<class T>
+T mse(matrix<T> y, matrix<T> Y)
+{
+	auto diff  = (y-Y);
+	std::cout << diff;
+	return diff.norm_squared();
+}
 
 template<class T>
 int convolution<T>::seed = time(NULL) + 0xBAB;
@@ -44,7 +51,7 @@ std::ostream& operator<< (std::ostream& os, convolution<U>& conv)
 }
 
 	template<class T>
-std::vector< matrix<T> > convolution<T>::flow(matrix<T> &img)//de-layered
+std::vector< matrix<T> > convolution<T>::flow(matrix<T> &img)
 {
 	const int img_r = (img.get_rows() - kernel_length)/stride + 1,
 	      img_c = (img.get_cols() - kernel_length)/stride + 1;
@@ -59,7 +66,7 @@ std::vector< matrix<T> > convolution<T>::flow(matrix<T> &img)//de-layered
 		for (int c = 0; c < img_c; c++) {
 			for (int d = 0; d < depth; d++) {
 				T sum = bias[d] + dot(kernel[d], img.submatrix(r*stride, c*stride, kernel_length, kernel_length));
-				convolved[d](r, c) = sum;
+				convolved[d](c, r) = sum;
 			}
 		}
 	}

@@ -47,6 +47,18 @@ matrix<T> matrix<T>::operator + (matrix B)
 }
 
 	template<class T>
+matrix<T> matrix<T>::operator - (matrix B)
+{
+	return *this+(B*-1);
+}
+
+	template<class T>
+matrix<T> matrix<T>::operator * (T B)
+{
+	return this->apply<T>([B](T x)->T{return x*B;});
+}
+
+	template<class T>
 matrix<T> matrix<T>::operator * (matrix B)
 {
 	if (cols == B.get_rows()) {
@@ -200,4 +212,13 @@ matrix<T> matrix<T>::submatrix(int starting_r, int starting_c, int sm_rows, int 
 	}
 	
 	return sm;
+}
+
+	template<class T>
+T matrix<T>::norm_squared()
+{
+	T sum = 0;
+	for (int i = 0; i < rows*cols; i++)
+		sum += (*(data+i)) * (*(data+i));
+	return sum;
 }
